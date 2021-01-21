@@ -1,24 +1,18 @@
 const express = require('express');
-const exphbs = require('express-handlebars');
-
-const bodyParser = require('body-parser');
+const handlebars = require('express-handlebars');
 
 const app = express();
 
 const host = '127.0.0.1';
 const port = 3001;
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.engine('handlebars', handlebars({ defaultLayout: 'main' }));
 
-app.engine('hbs', exphbs({
-  extname: '.hbs',
-}));
-
-app.set('view engine', 'hbs');
+app.set('views', './views');
+app.set('view engine', 'handlebars');
 
 app.get('/', (req, res) => {
-  // отправляем ответ
-  res.send('<h2>Привет Express!</h2>');
+  res.render('home');
 });
 
 app.listen(port, host, () => {
