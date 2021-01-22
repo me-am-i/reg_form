@@ -24,6 +24,13 @@ app.post('/user', [
   check('login', 'Incorrect login').isLength({ min: 3 }),
   check('password', 'Too short password').isLength({ min: 5 }),
 ], (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.render('index', {
+      errors: errors.array(),
+    });
+  }
 
   return res.render('index', {
     success: 'Success',
