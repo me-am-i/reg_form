@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const handlebars = require('express-handlebars');
 const { check, validationResult } = require('express-validator');
 
@@ -8,6 +9,7 @@ const app = express();
 const host = '127.0.0.1';
 const port = 3001;
 
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -24,17 +26,15 @@ app.post('/user', [
   check('login', 'Incorrect login').isLength({ min: 3 }),
   check('password', 'Too short password').isLength({ min: 5 }),
 ], (req, res) => {
+  console.log(req.body.login);
+
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    return res.render('index', {
-      errors: errors.array(),
-    });
+    return res.json({ errors: errors.array() });
   }
 
-  return res.render('index', {
-    success: 'Success',
-  });
+  return res.json({ success: 'Success' });
 });
 
 app.listen(port, host, () => {
